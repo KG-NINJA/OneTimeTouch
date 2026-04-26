@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>わんこ とけいタッチ</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="stage" aria-label="時計クイズ">
+      <div class="topbar">
+        <div>
+          <p class="eyebrow">三択タッチパネル</p>
+          <h1>わんこ とけいタッチ</h1>
+        </div>
+        <div class="score" aria-live="polite">
+          <span>せいかい</span>
+          <strong id="score">0</strong>
+        </div>
+      </div>
+
+      <div class="play-area">
+        <div class="dog-panel">
+          <div id="dog" class="dog" aria-hidden="true">
+            <div class="ear left"></div>
+            <div class="ear right"></div>
+            <div class="face">
+              <div class="eye left"></div>
+              <div class="eye right"></div>
+              <div class="nose"></div>
+              <div class="mouth"></div>
+            </div>
+          </div>
+          <p id="message" class="message">この時計は なんじ？</p>
+        </div>
+
+        <div class="clock-wrap">
+          <div class="clock" aria-label="問題のアナログ時計">
+            <div class="ticks" id="ticks"></div>
+            <div class="number n12">12</div>
+            <div class="number n3">3</div>
+            <div class="number n6">6</div>
+            <div class="number n9">9</div>
+            <div id="hourHand" class="hand hour"></div>
+            <div id="minuteHand" class="hand minute"></div>
+            <div class="pin"></div>
+          </div>
+          <button id="nextBtn" class="next" type="button">つぎの もんだい</button>
+        </div>
+      </div>
+
+      <div id="choices" class="choices" aria-label="時刻の選択肢"></div>
+    </section>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>
