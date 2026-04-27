@@ -7,8 +7,7 @@
 以下のファイルをブラウザで開きます。
 
 ```text
-C:\Users\user\OneDrive\Desktop\AgentOS2.5\dog-time-praise\index.html
-```
+index.html
 
 ## 使い方
 
