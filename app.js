@@ -126,13 +126,29 @@ function renderChoices(answer) {
     button.className = "choice";
     button.type = "button";
     button.appendChild(createClockElement(time));
-    button.addEventListener("click", () => choose(button, time));
+
+    // Immediate response for pointer interactions
+    button.addEventListener("pointerdown", (e) => {
+      // Only prevent default for touch to avoid "ghost clicks" but allow click event for keyboard
+      if (e.pointerType === "touch" || e.pointerType === "pen") {
+        e.preventDefault();
+        choose(button, time);
+      }
+    });
+
+    // Fallback for mouse click and keyboard (Enter/Space)
+    button.addEventListener("click", (e) => {
+      // If pointerdown already handled it, this might not be needed if e.preventDefault() was called
+      // but standard clicks (mouse/keyboard) will still work here.
+      choose(button, time);
+    });
+
     choicesEl.appendChild(button);
   });
 }
 
 function choose(button, time) {
-  if (locked) return;
+  if (locked || button.classList.contains("correct") || button.classList.contains("wrong")) return;
   if (sameTime(time, current)) {
     locked = true;
     score += 1;
@@ -158,5 +174,32 @@ function newQuestion() {
   messageEl.textContent = "おなじ じかんの とけいは どれ？";
 }
 
-nextBtn.addEventListener("click", newQuestion);
+nextBtn.addEventListener("pointerdown", (e) => {
+  if (e.pointerType === "touch" || e.pointerType === "pen") {
+    e.preventDefault();
+    newQuestion();
+  }
+});
+nextBtn.addEventListener("click", () => {
+  newQuestion();
+});
+
+dogEl.addEventListener("pointerdown", (e) => {
+  if (locked) return;
+  if (e.pointerType === "touch" || e.pointerType === "pen") {
+    e.preventDefault();
+  }
+  dogEl.classList.remove("happy");
+  void dogEl.offsetWidth;
+  dogEl.classList.add("happy");
+});
+// Dog doesn't need click listener as it's not a button,
+// but we allow mouse down to trigger the happy state too.
+dogEl.addEventListener("mousedown", (e) => {
+  if (locked) return;
+  dogEl.classList.remove("happy");
+  void dogEl.offsetWidth;
+  dogEl.classList.add("happy");
+});
+
 newQuestion();
