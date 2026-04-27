@@ -1,29 +1,72 @@
-const hourHand = document.getElementById("hourHand");
-const minuteHand = document.getElementById("minuteHand");
 const choicesEl = document.getElementById("choices");
 const messageEl = document.getElementById("message");
 const scoreEl = document.getElementById("score");
 const dogEl = document.getElementById("dog");
 const nextBtn = document.getElementById("nextBtn");
-const ticksEl = document.getElementById("ticks");
+const targetTimeEl = document.getElementById("targetTime");
 
 let current = null;
 let score = 0;
 let locked = false;
 let audioContext = null;
 
-function buildTicks() {
-  const radius = 190;
-  document.documentElement.style.setProperty("--clock-radius", `${radius}px`);
-  ticksEl.innerHTML = "";
+function createClockElement(time) {
+  const clock = document.createElement("div");
+  clock.className = "clock";
+
+  const ticks = document.createElement("div");
+  ticks.className = "ticks";
   for (let i = 0; i < 60; i += 1) {
     const tick = document.createElement("div");
     tick.className = "tick";
-    tick.style.height = i % 5 === 0 ? "22px" : "11px";
-    tick.style.width = i % 5 === 0 ? "6px" : "3px";
-    tick.style.transform = `rotate(${i * 6}deg) translateY(-188px)`;
-    ticksEl.appendChild(tick);
+    if (i % 5 === 0) {
+      tick.style.height = "12px";
+      tick.style.width = "4px";
+      tick.style.marginLeft = "-2px";
+      tick.style.transformOrigin = "50% 130px";
+      tick.style.transform = `translateY(-130px) rotate(${i * 6}deg)`;
+    } else {
+      tick.style.height = "6px";
+      tick.style.width = "2px";
+      tick.style.marginLeft = "-1px";
+      tick.style.transformOrigin = "50% 130px";
+      tick.style.transform = `translateY(-130px) rotate(${i * 6}deg)`;
+    }
+    ticks.appendChild(tick);
   }
+  clock.appendChild(ticks);
+
+  const numbers = [
+    { n: 12, c: "n12" },
+    { n: 3, c: "n3" },
+    { n: 6, c: "n6" },
+    { n: 9, c: "n9" }
+  ];
+  numbers.forEach(num => {
+    const el = document.createElement("div");
+    el.className = `number ${num.c}`;
+    el.textContent = num.n;
+    clock.appendChild(el);
+  });
+
+  const hourHand = document.createElement("div");
+  hourHand.className = "hand hour";
+  const minuteHand = document.createElement("div");
+  minuteHand.className = "hand minute";
+
+  const hourRotation = ((time.hour % 12) * 30) + (time.minute * 0.5);
+  const minuteRotation = time.minute * 6;
+  hourHand.style.transform = `rotate(${hourRotation}deg)`;
+  minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
+
+  clock.appendChild(hourHand);
+  clock.appendChild(minuteHand);
+
+  const pin = document.createElement("div");
+  pin.className = "pin";
+  clock.appendChild(pin);
+
+  return clock;
 }
 
 function formatTime(time) {
@@ -55,13 +98,6 @@ function shuffle(items) {
     .map((item) => item.value);
 }
 
-function setClock(time) {
-  const hourRotation = ((time.hour % 12) * 30) + (time.minute * 0.5);
-  const minuteRotation = time.minute * 6;
-  hourHand.style.transform = `rotate(${hourRotation}deg)`;
-  minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
-}
-
 function playChime() {
   audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
   const now = audioContext.currentTime;
@@ -89,7 +125,7 @@ function renderChoices(answer) {
     const button = document.createElement("button");
     button.className = "choice";
     button.type = "button";
-    button.textContent = formatTime(time);
+    button.appendChild(createClockElement(time));
     button.addEventListener("click", () => choose(button, time));
     choicesEl.appendChild(button);
   });
@@ -117,11 +153,10 @@ function choose(button, time) {
 function newQuestion() {
   locked = false;
   current = randomTime();
-  setClock(current);
+  targetTimeEl.textContent = formatTime(current);
   renderChoices(current);
-  messageEl.textContent = "この時計は なんじ？";
+  messageEl.textContent = "おなじ じかんの とけいは どれ？";
 }
 
 nextBtn.addEventListener("click", newQuestion);
-buildTicks();
 newQuestion();
