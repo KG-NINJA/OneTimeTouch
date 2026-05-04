@@ -20,17 +20,17 @@ function createClockElement(time) {
     const tick = document.createElement("div");
     tick.className = "tick";
     if (i % 5 === 0) {
-      tick.style.height = "12px";
+      tick.style.height = "14px";
       tick.style.width = "4px";
       tick.style.marginLeft = "-2px";
-      tick.style.transformOrigin = "50% 130px";
-      tick.style.transform = `translateY(-130px) rotate(${i * 6}deg)`;
+      tick.style.transformOrigin = "50% 160px";
+      tick.style.transform = `translateY(-160px) rotate(${i * 6}deg)`;
     } else {
-      tick.style.height = "6px";
+      tick.style.height = "8px";
       tick.style.width = "2px";
       tick.style.marginLeft = "-1px";
-      tick.style.transformOrigin = "50% 130px";
-      tick.style.transform = `translateY(-130px) rotate(${i * 6}deg)`;
+      tick.style.transformOrigin = "50% 160px";
+      tick.style.transform = `translateY(-160px) rotate(${i * 6}deg)`;
     }
     ticks.appendChild(tick);
   }
